@@ -82,10 +82,20 @@ class _AppListScreenState extends State<AppListScreen> {
               toggleApp(app.packageName);
             }),
         title: Text(app.name),
-        // subtitle: Text(app.getVersionInfo()),
         onTap: () => InstalledApps.startApp(app.packageName),
+        onLongPress: () => _uninstallApp(app),
       ),
     );
+  }
+
+  void _uninstallApp(AppInfo app) async {
+    bool? uninstalled = await InstalledApps.uninstallApp(app.packageName);
+
+    if (uninstalled != null && uninstalled) {
+      await Future.delayed(Duration(milliseconds: 2000));
+
+      setState(() {});
+    }
   }
 
   Widget _buildProgressIndicator() {
