@@ -7,40 +7,53 @@ import 'package:feather_launcher/screens/app_info.dart';
 // TODO: Add to homescreen check box (limit of 8 apps total, 4 custom apps, tbd)
 // TODO: On hold, confirm to uninstall app, refresh list
 
-class AppListScreen extends StatelessWidget {
+class AppListScreen extends StatefulWidget {
+  @override
+  _AppListScreenState createState() => _AppListScreenState();
+}
+
+class _AppListScreenState extends State<AppListScreen> {
+  Map<String, bool> _checkedApps = {};
+
+  void toggleApp(String packageName) {
+    setState(() {
+      if (_checkedApps.containsKey(packageName)) {
+        _checkedApps[packageName] = false;
+      } else {
+        _checkedApps[packageName] = true;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
-      body: _buildBody(),
+      body: FutureBuilder<List<AppInfo>>(
+        future: InstalledApps.getInstalledApps(true, true),
+        builder: (
+          BuildContext buildContext,
+          AsyncSnapshot<List<AppInfo>> snapshot,
+        ) {
+          return snapshot.connectionState == ConnectionState.done
+              ? snapshot.hasData
+                  ? _buildListView(snapshot.data ?? [])
+                  : _buildError()
+              : _buildProgressIndicator();
+        },
+      ),
     );
   }
 
   AppBar _buildAppBar() {
     return AppBar(
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.black,
-        statusBarIconBrightness: Brightness.dark),
+          statusBarColor: Colors.black,
+          statusBarIconBrightness: Brightness.dark),
       toolbarHeight: 0,
       backgroundColor: Colors.white,
       shadowColor: Colors.transparent,
-    );
-  }
-
-  Widget _buildBody() {
-    return FutureBuilder<List<AppInfo>>(
-      future: InstalledApps.getInstalledApps(true, true),
-      builder: (
-        BuildContext buildContext,
-        AsyncSnapshot<List<AppInfo>> snapshot,
-      ) {
-        return snapshot.connectionState == ConnectionState.done
-            ? snapshot.hasData
-                ? _buildListView(snapshot.data ?? [])
-                : _buildError()
-            : _buildProgressIndicator();
-      },
     );
   }
 
@@ -52,6 +65,10 @@ class AppListScreen extends StatelessWidget {
   }
 
   Widget _buildListItem(BuildContext context, AppInfo app) {
+    bool isChecked = _checkedApps.containsKey(app.packageName)
+        ? _checkedApps[app.packageName]!
+        : false;
+
     return Card(
       shadowColor: Colors.transparent,
       child: ListTile(
@@ -59,6 +76,11 @@ class AppListScreen extends StatelessWidget {
           backgroundColor: Colors.transparent,
           child: Image.memory(app.icon!),
         ),
+        trailing: Checkbox(
+            value: isChecked,
+            onChanged: (bool? value) {
+              toggleApp(app.packageName);
+            }),
         title: Text(app.name),
         // subtitle: Text(app.getVersionInfo()),
         onTap: () => InstalledApps.startApp(app.packageName),
@@ -67,12 +89,12 @@ class AppListScreen extends StatelessWidget {
   }
 
   Widget _buildProgressIndicator() {
-    return Center(child: Text("Getting installed apps ...."));
+    return Center(child: Text("Getting installed apps...."));
   }
 
   Widget _buildError() {
     return Center(
-      child: Text("Error occurred while getting installed apps ...."),
+      child: Text("Error occurred while getting installed apps...."),
     );
   }
 }
