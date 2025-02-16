@@ -1,16 +1,21 @@
 # feather_launcher
 
-A new Flutter project.
+A minimalist launcher that helps to decrease visual distractions when navigating your homescreen
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Has a minimal home screen consisting of a clock and 8 applications. A few defaults being:
 
-A few resources to get you started if this is your first Flutter project:
+* Messages
+* Phone
+* Browser
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Each linked to the default app for their category
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+5 other applications can be added to the home screen
+
+## Future features
+
+* Random code to open social media apps
+* Options screen to change colors of the launcher/task bar icons
+* Uninstall apps with a hold
