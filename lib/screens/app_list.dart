@@ -5,6 +5,7 @@ import 'package:installed_apps/installed_apps.dart';
 import 'package:feather_launcher/screens/app_info.dart';
 
 // TODO: Add to homescreen check box (limit of 8 apps total, 4 custom apps, tbd)
+// TODO: On hold, confirm to uninstall app, refresh list
 
 class AppListScreen extends StatelessWidget {
   @override
