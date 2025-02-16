@@ -4,7 +4,7 @@ import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
 import 'package:feather_launcher/screens/app_info.dart';
 
-// TODO: Add to homescreen check box (limit of 8 apps tbd)
+// TODO: Add to homescreen check box (limit of 8 apps total, 4 custom apps, tbd)
 
 class AppListScreen extends StatelessWidget {
   @override
@@ -52,17 +52,15 @@ class AppListScreen extends StatelessWidget {
 
   Widget _buildListItem(BuildContext context, AppInfo app) {
     return Card(
+      shadowColor: Colors.transparent,
       child: ListTile(
         leading: CircleAvatar(
           backgroundColor: Colors.transparent,
           child: Image.memory(app.icon!),
         ),
         title: Text(app.name),
-        subtitle: Text(app.getVersionInfo()),
-        onTap: () => Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AppInfoScreen(app: app)),
-        ),
+        // subtitle: Text(app.getVersionInfo()),
+        onTap: () => InstalledApps.startApp(app.packageName),
       ),
     );
   }
