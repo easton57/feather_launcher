@@ -19,3 +19,4 @@ Each linked to the default app for their category
 * Random code to open social media apps
 * Options screen to change colors of the launcher/task bar icons
 * Uninstall apps with a hold
+* Schedule for light/dark
