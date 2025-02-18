@@ -13,6 +13,13 @@ class _AppListScreenState extends State<AppListScreen> {
   final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
   List<String>? homeApps = [];
   List<String>? homeAppNames = [];
+  List<AppInfo> installedApps = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getAppPreferences();
+  }
 
   void getAppPreferences() async {
     homeApps = await asyncPrefs.getStringList('homeAppPackages');
@@ -21,10 +28,11 @@ class _AppListScreenState extends State<AppListScreen> {
     homeAppNames ??= [];
   }
 
-  void toggleApp(AppInfo app) async {
-    // Read from settings
-    getAppPreferences();
+  void loadInstalledApps() async {
+    installedApps = await InstalledApps.getInstalledApps(false, true);
+  }
 
+  void toggleApp(AppInfo app) async {
     if (homeApps?.length == 8) {
       // Pop up warning thing
       return;
