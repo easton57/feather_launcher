@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:installed_apps/installed_apps.dart';
-import 'package:feather_launcher/screens/app_info.dart';
 import 'package:feather_launcher/screens/app_list.dart';
 import 'package:feather_launcher/util/common.dart';
 
@@ -32,14 +31,7 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   Column(
                     children: [
-                      Text('App'),
-                      Text('App'),
-                      Text('App'),
-                      Text('App'),
-                      Text('App'),
-                      Text('App'),
-                      Text('App'),
-                      Text('App'),
+                      Text('App'), // Where I want my 8 apps to be populated
                     ],
                   ),
                 ],
