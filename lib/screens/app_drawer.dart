@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:installed_apps/app_info.dart';
 import 'package:installed_apps/installed_apps.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // TODO: Add to homescreen check box (limit of 8 apps total, 4 custom apps, tbd)
 
@@ -11,24 +12,45 @@ class AppListScreen extends StatefulWidget {
 }
 
 class _AppListScreenState extends State<AppListScreen> {
-  Map<String, bool> _checkedApps = {};
+  final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+  List<String>? homeApps = [];
+  List<String>? homeAppNames = [];
 
-  void toggleApp(String packageName) {
-    if (_checkedApps.length == 8) {
+  void getAppPreferences() async {
+    homeApps = await asyncPrefs.getStringList('homeAppPackages');
+    homeAppNames = await asyncPrefs.getStringList('homeAppNames');
+    homeApps ??= [];
+    homeAppNames ??= [];
+  }
 
+  void toggleApp(AppInfo app) async {
+    // Read from settings
+    getAppPreferences();
+
+    if (homeApps?.length == 8) {
+      // Pop up warning thing
+      return;
     }
 
     setState(() {
-      if (_checkedApps.containsKey(packageName)) {
-        _checkedApps[packageName] = false;
+      if (homeApps!.contains(app.packageName)) {
+        homeApps!.remove(app.packageName);
+        homeAppNames!.remove(app.name);
       } else {
-        _checkedApps[packageName] = true;
+        homeApps!.add(app.packageName);
+        homeAppNames!.add(app.name);
       }
     });
+
+    // Write to settings
+    asyncPrefs.setStringList('homeAppPackages', homeApps!);
+    asyncPrefs.setStringList('homeAppNames', homeAppNames!);
   }
 
   @override
   Widget build(BuildContext context) {
+    getAppPreferences();
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
@@ -67,9 +89,7 @@ class _AppListScreenState extends State<AppListScreen> {
   }
 
   Widget _buildListItem(BuildContext context, AppInfo app) {
-    bool isChecked = _checkedApps.containsKey(app.packageName)
-        ? _checkedApps[app.packageName]!
-        : false;
+    bool isChecked = homeApps!.contains(app.packageName);
 
     return Card(
       shadowColor: Colors.transparent,
@@ -81,7 +101,7 @@ class _AppListScreenState extends State<AppListScreen> {
         trailing: Checkbox(
             value: isChecked,
             onChanged: (bool? value) {
-              toggleApp(app.packageName);
+              toggleApp(app);
             }),
         title: Text(app.name),
         onTap: () => InstalledApps.startApp(app.packageName),
