@@ -16,3 +16,5 @@ Has a minimal home screen consisting of a clock and 8 applications
 * Random code to open social media apps
 * Options screen to change colors of the launcher/task bar icons
 * Schedule for light/dark
+* Search apps
+* Reorder favorite apps
