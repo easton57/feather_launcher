@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:installed_apps/installed_apps.dart';
@@ -5,103 +6,110 @@ import 'package:feather_launcher/screens/app_info.dart';
 import 'package:feather_launcher/screens/app_list.dart';
 import 'package:feather_launcher/util/common.dart';
 
+// TODO: Have a black and white color option and transparent background option
+// TODO: Swap settings and app drawer icons in settings
+
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // TODO: Have a black and white color option and transparent background option
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
-      body: _buildBody(context),
+      body: Stack(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(0, 90, 0, 0),
+              child: Clock(),
+            ),
+          ],
+        ),
+        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Padding(
+              padding: EdgeInsets.fromLTRB(0, 200, 0, 0),
+              child: Row(
+                children: [
+                  Column(
+                    children: [
+                      Text('App'),
+                      Text('App'),
+                      Text('App'),
+                      Text('App'),
+                      Text('App'),
+                      Text('App'),
+                      Text('App'),
+                      Text('App'),
+                    ],
+                  ),
+                ],
+              ))
+        ]),
+        Padding(
+            padding: EdgeInsets.fromLTRB(0, 0, 20, 30),
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AppListScreen())),
+                  tooltip: "Open app library",
+                  icon: const Icon(Icons.apps)),
+            )),
+        Padding(
+            padding: EdgeInsets.fromLTRB(20, 0, 0, 30),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: IconButton(
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AppListScreen())),
+                  tooltip: "Open settings",
+                  icon: const Icon(Icons.settings)),
+            )),
+      ]),
     );
   }
 
   AppBar _buildAppBar() {
     return AppBar(
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.black,
-        statusBarIconBrightness: Brightness.dark),
+          statusBarColor: Colors.black,
+          statusBarIconBrightness: Brightness.dark),
       toolbarHeight: 0,
       backgroundColor: Colors.white,
       shadowColor: Colors.transparent,
     );
   }
+}
 
-  Widget _buildBody(BuildContext context) {
-    return ListView( // Scaffold instead?
-      children: [
-        _buildListItem(
-          context,
-          "Installed Apps",
-          "Get installed apps on device. With options to exclude system app, get app icon & matching package name prefix.",
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AppListScreen()),
-          ),
-        ),
-        /*_buildListItem(
-          context,
-          "App Info",
-          "Get app info with package name",
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AppInfoScreen()),
-          ),
-        ),
-        _buildListItem(
-          context,
-          "Start App",
-          "Start app with package name. Get callback of success or failure.",
-          () => InstalledApps.startApp("com.google.android.gm"),
-        ),
-        _buildListItem(
-          context,
-          "Go To App Settings Screen",
-          "Directly navigate to app settings screen with package name",
-          () => InstalledApps.openSettings("com.google.android.gm"),
-        ),
-        _buildListItem(
-          context,
-          "Check If System App",
-          "Check if app is system app with package name",
-          () => CommonUtil.checkIfSystemApp(context, "com.google.android.gm"),
-        ),
-        _buildListItem(
-          context,
-          "Uninstall app",
-          "Uninstall app with package name",
-          () => InstalledApps.uninstallApp(
-              "com.sharmadhiraj.installed_apps_example"),
-        ),
-        _buildListItem(
-          context,
-          "Is app installed?",
-          "Check if app is installed using package name",
-          () => CommonUtil.checkIfAppIsInstalled(
-            context,
-            "com.sharmadhiraj.installed_apps_example",
-          ),
-        ),*/
-      ],
-    );
+class Clock extends StatefulWidget {
+  @override
+  _ClockState createState() => _ClockState();
+}
+
+class _ClockState extends State<Clock> {
+  String _currentTime = '00:00';
+
+  void _updateTime() {
+    setState(() {
+      DateTime now = DateTime.now();
+      String formattedTime =
+          '${now.hour % 12 < 1 ? 12 : now.hour % 12}:${(now.minute) % 60 < 10 ? '0' : ''}${(now.minute) % 60}';
+      _currentTime = formattedTime;
+    });
   }
 
-  Widget _buildListItem(
-    BuildContext context,
-    String title,
-    String subtitle,
-    Function() onTap,
-  ) {
-    return Card(
-      shadowColor: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: ListTile(
-          title: Text(title),
-          subtitle: Text(subtitle),
-          onTap: onTap,
-        ),
-      ),
+  @override
+  void initState() {
+    super.initState();
+    _updateTime(); // initial update
+    Timer.periodic(Duration(seconds: 1), (timer) => _updateTime());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      _currentTime,
+      style: TextStyle(fontSize: 64),
     );
   }
 }
