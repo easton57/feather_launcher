@@ -12,7 +12,6 @@ class AppListScreen extends StatefulWidget {
 class _AppListScreenState extends State<AppListScreen> {
   final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
   List<String>? homeApps = [];
-  List<String>? homeAppNames = [];
   List<AppInfo> installedApps = [];
 
   @override
@@ -22,10 +21,8 @@ class _AppListScreenState extends State<AppListScreen> {
   }
 
   void getAppPreferences() async {
-    homeApps = await asyncPrefs.getStringList('homeAppPackages');
-    homeAppNames = await asyncPrefs.getStringList('homeAppNames');
+    homeApps = await asyncPrefs.getStringList('homeApps');
     homeApps ??= [];
-    homeAppNames ??= [];
   }
 
   void loadInstalledApps() async {
@@ -38,19 +35,18 @@ class _AppListScreenState extends State<AppListScreen> {
       return;
     }
 
+    String appName = '${app.name}:${app.packageName}';
+
     setState(() {
       if (homeApps!.contains(app.packageName)) {
-        homeApps!.remove(app.packageName);
-        homeAppNames!.remove(app.name);
+        homeApps!.remove(appName);
       } else {
-        homeApps!.add(app.packageName);
-        homeAppNames!.add(app.name);
+        homeApps!.add(appName);
       }
     });
 
     // Write to settings
-    asyncPrefs.setStringList('homeAppPackages', homeApps!);
-    asyncPrefs.setStringList('homeAppNames', homeAppNames!);
+    asyncPrefs.setStringList('homeApps', homeApps!);
   }
 
   @override
@@ -95,7 +91,7 @@ class _AppListScreenState extends State<AppListScreen> {
   }
 
   Widget _buildListItem(BuildContext context, AppInfo app) {
-    bool isChecked = homeApps!.contains(app.packageName);
+    bool isChecked = homeApps!.contains('${app.name}:${app.packageName}');
 
     return Card(
       shadowColor: Colors.transparent,

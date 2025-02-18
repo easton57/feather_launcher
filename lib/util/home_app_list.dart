@@ -11,13 +11,10 @@ class HomeAppList extends StatefulWidget {
 class _ListState extends State<HomeAppList> {
   final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
   List<String>? homeApps = [];
-  List<String>? homeAppNames = [];
 
   void getAppPreferences() async {
-    homeApps = await asyncPrefs.getStringList('homeAppPackages');
-    homeAppNames = await asyncPrefs.getStringList('homeAppNames');
+    homeApps = await asyncPrefs.getStringList('homeApps');
     homeApps ??= [];
-    homeAppNames ??= [];
   }
 
   List<String> appList = [];
@@ -39,7 +36,7 @@ class _ListState extends State<HomeAppList> {
   Widget build(BuildContext context) {
     getAppPreferences();
 
-    if (homeAppNames!.isEmpty) {
+    if (homeApps!.isEmpty) {
       return Column(children: [
         Wrap(children: [
           Text(
@@ -51,13 +48,13 @@ class _ListState extends State<HomeAppList> {
       ]);
     } else {
       return Column(
-        children: homeAppNames!
+        children: homeApps!
             .map((appName) => Padding(
                 padding: EdgeInsets.fromLTRB(0, 7, 0, 7),
                 child: TextButton(
-                  onPressed: () => InstalledApps.startApp(homeApps![homeAppNames!.indexOf(appName)]),
+                  onPressed: () => InstalledApps.startApp(appName.split(':')[1]),
                   child: Text(
-                    appName,
+                    appName.split(':')[0],
                     style: TextStyle(fontSize: 24, color: Colors.black),
                   ),
                 )))
