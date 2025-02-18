@@ -7,6 +7,10 @@ import 'package:feather_launcher/screens/app_list.dart';
 // TODO: Swap settings and app drawer icons in settings
 
 class HomeScreen extends StatelessWidget {
+  final List<String> _appNames = ['App1', 'App2', 'App3'];
+
+  HomeScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,11 +31,7 @@ class HomeScreen extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(0, 200, 0, 0),
               child: Row(
                 children: [
-                  Column(
-                    children: [
-                      Text('App'), // Where I want my 8 apps to be populated
-                    ],
-                  ),
+                  Text('Test')
                 ],
               ))
         ]),
@@ -67,6 +67,13 @@ class HomeScreen extends StatelessWidget {
       toolbarHeight: 0,
       backgroundColor: Colors.white,
       shadowColor: Colors.transparent,
+    );
+  }
+
+  Widget _buildAppList() {
+    return Column(
+      children:
+          _appNames.map((appName) => ListTile(title: Text(appName))).toList(),
     );
   }
 }
