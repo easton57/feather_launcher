@@ -53,7 +53,7 @@ class _AppListScreenState extends State<AppListScreen> {
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
       body: FutureBuilder<List<AppInfo>>(
-        future: InstalledApps.getInstalledApps(true, true),
+        future: InstalledApps.getInstalledApps(false, true),
         builder: (
           BuildContext buildContext,
           AsyncSnapshot<List<AppInfo>> snapshot,
