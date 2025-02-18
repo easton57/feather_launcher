@@ -4,19 +4,15 @@ A minimalist launcher that helps to decrease visual distractions when navigating
 
 ## Getting Started
 
-Has a minimal home screen consisting of a clock and 8 applications. A few defaults being:
+Has a minimal home screen consisting of a clock and 8 applications
 
-* Messages
-* Phone
-* Browser
+## Features
 
-Each linked to the default app for their category
-
-5 other applications can be added to the home screen
+* Place 8 favorite apps on the homescreen
+* Uninstall apps with a hold
 
 ## Future features
 
 * Random code to open social media apps
 * Options screen to change colors of the launcher/task bar icons
-* Uninstall apps with a hold
 * Schedule for light/dark
