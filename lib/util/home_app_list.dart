@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:installed_apps/installed_apps.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeAppList extends StatefulWidget {
   @override
@@ -7,6 +9,17 @@ class HomeAppList extends StatefulWidget {
 }
 
 class _ListState extends State<HomeAppList> {
+  final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
+  List<String>? homeApps = [];
+  List<String>? homeAppNames = [];
+
+  void getAppPreferences() async {
+    homeApps = await asyncPrefs.getStringList('homeAppPackages');
+    homeAppNames = await asyncPrefs.getStringList('homeAppNames');
+    homeApps ??= [];
+    homeAppNames ??= [];
+  }
+
   List<String> appList = [];
 
   void _updateList() {
@@ -24,20 +37,25 @@ class _ListState extends State<HomeAppList> {
 
   @override
   Widget build(BuildContext context) {
-    if (appList.isEmpty) {
+    getAppPreferences();
+
+    if (homeAppNames!.isEmpty) {
       return Column(children: [
         Wrap(children: [
-          Text("Home app list is empty\nPlease check some apps in the app drawer",
-              style: TextStyle(fontSize: 18, color: Colors.black), textAlign: TextAlign.center,)
+          Text(
+            "Home app list is empty\nPlease check some apps in the app drawer",
+            style: TextStyle(fontSize: 18, color: Colors.black),
+            textAlign: TextAlign.center,
+          )
         ])
       ]);
     } else {
       return Column(
-        children: appList
+        children: homeAppNames!
             .map((appName) => Padding(
                 padding: EdgeInsets.fromLTRB(0, 7, 0, 7),
                 child: TextButton(
-                  onPressed: () => (),
+                  onPressed: () => InstalledApps.startApp(homeApps![homeAppNames!.indexOf(appName)]),
                   child: Text(
                     appName,
                     style: TextStyle(fontSize: 24, color: Colors.black),
