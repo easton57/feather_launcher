@@ -7,7 +7,7 @@ class HomeAppList extends StatefulWidget {
 }
 
 class _ListState extends State<HomeAppList> {
-  List<String> appList = ['App1', 'App2', 'App3', 'App4', 'App5', 'App6', 'App7', 'App8'];
+  List<String> appList = [];
 
   void _updateList() {
     setState(() {
@@ -24,13 +24,27 @@ class _ListState extends State<HomeAppList> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: appList
-          .map((appName) => Padding(padding: EdgeInsets.fromLTRB(0, 7, 0, 7), child: TextButton(
-                onPressed: () => (),
-                child: Text(appName, style: TextStyle(fontSize: 24, color: Colors.black),),
-              )))
-          .toList(),
-    );
+    if (appList.isEmpty) {
+      return Column(children: [
+        Wrap(children: [
+          Text("Home app list is empty\nPlease check some apps in the app drawer",
+              style: TextStyle(fontSize: 18, color: Colors.black), textAlign: TextAlign.center,)
+        ])
+      ]);
+    } else {
+      return Column(
+        children: appList
+            .map((appName) => Padding(
+                padding: EdgeInsets.fromLTRB(0, 7, 0, 7),
+                child: TextButton(
+                  onPressed: () => (),
+                  child: Text(
+                    appName,
+                    style: TextStyle(fontSize: 24, color: Colors.black),
+                  ),
+                )))
+            .toList(),
+      );
+    }
   }
 }
