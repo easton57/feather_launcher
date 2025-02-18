@@ -4,38 +4,25 @@ import 'package:installed_apps/installed_apps.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeAppList extends StatefulWidget {
+  const HomeAppList({super.key});
+
   @override
-  _ListState createState() => _ListState();
+  _HomeListState createState() => _HomeListState();
 }
 
-class _ListState extends State<HomeAppList> {
+class _HomeListState extends State<HomeAppList> {
   final SharedPreferencesAsync asyncPrefs = SharedPreferencesAsync();
   List<String>? homeApps = [];
-
-  void getAppPreferences() async {
-    homeApps = await asyncPrefs.getStringList('homeApps');
-    homeApps ??= [];
-  }
-
-  List<String> appList = [];
-
-  void _updateList() {
-    setState(() {
-      appList = appList;
-    });
-  }
 
   @override
   void initState() {
     super.initState();
-    _updateList(); // initial update
+    getAppPreferences();
     Timer.periodic(Duration(seconds: 1), (timer) => _updateList());
   }
 
   @override
   Widget build(BuildContext context) {
-    getAppPreferences();
-
     if (homeApps!.isEmpty) {
       return Column(children: [
         Wrap(children: [
@@ -52,7 +39,8 @@ class _ListState extends State<HomeAppList> {
             .map((appName) => Padding(
                 padding: EdgeInsets.fromLTRB(0, 7, 0, 7),
                 child: TextButton(
-                  onPressed: () => InstalledApps.startApp(appName.split(':')[1]),
+                  onPressed: () =>
+                      InstalledApps.startApp(appName.split(':')[1]),
                   child: Text(
                     appName.split(':')[0],
                     style: TextStyle(fontSize: 24, color: Colors.black),
@@ -61,5 +49,16 @@ class _ListState extends State<HomeAppList> {
             .toList(),
       );
     }
+  }
+
+  void getAppPreferences() async {
+    homeApps = await asyncPrefs.getStringList('homeApps');
+    homeApps ??= [];
+  }
+
+  void _updateList() {
+    setState(() {
+      getAppPreferences();
+    });
   }
 }
