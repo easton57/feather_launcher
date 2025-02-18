@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:feather_launcher/util/clock.dart';
 import 'package:feather_launcher/util/home_app_list.dart';
-import 'package:feather_launcher/screens/app_list.dart';
+import 'package:feather_launcher/screens/app_drawer.dart';
 
 // TODO: Have a black and white color option and transparent background option
 // TODO: Swap settings and app drawer icons in settings
