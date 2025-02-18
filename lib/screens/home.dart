@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget {
               alignment: Alignment.bottomRight,
               child: IconButton(
                   onPressed: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AppListScreen())),
+                      MaterialPageRoute(builder: (context) => AppDrawer())),
                   tooltip: "Open app library",
                   icon: const Icon(Icons.apps)),
             )),
@@ -48,7 +48,7 @@ class HomeScreen extends StatelessWidget {
               alignment: Alignment.bottomLeft,
               child: IconButton(
                   onPressed: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AppListScreen())),
+                      MaterialPageRoute(builder: (context) => AppDrawer())),
                   tooltip: "Open settings",
                   icon: const Icon(Icons.settings)),
             )),
